@@ -1,13 +1,14 @@
-# Lambda DLQ
+# lambdadlq
 
 This project creates:
-- Lambda DLQ;
-- SQS Queue;
+- Lambda function with DLQ config;
 
-## Execute the lambda function asynchronous 
+## Execute Lambda function asynchronously 
 
+```
 aws lambda invoke \
     --function-name ${FunctionName} \
     --invocation-type Event \
     --payload '{}' \
     response.json
+```

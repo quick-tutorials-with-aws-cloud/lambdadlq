@@ -1,9 +1,8 @@
 AWSTemplateFormatVersion: 2010-09-09
 
-Description: Creates a Lambda with DLQ config and a SQS Queue
+Description: Creates a Lambda function with DLQ config
 
 Parameters:
-
   QueueName:
     Type: String
     Default: LambdaDLQ
@@ -19,13 +18,12 @@ Parameters:
   BucketKeyLambdaSourceCode:
     Type: String
     Default: LambdaDLQ.zip
-  
+
   Owner:
     Type: String
     Default: tg
 
 Resources:
-
   DLQName:
     Type: AWS::SQS::Queue
     Properties:
@@ -41,27 +39,27 @@ Resources:
     Properties:
       RoleName: !Sub ${FunctionName}ExecutionRole
       AssumeRolePolicyDocument:
-        Version: '2012-10-17'
+        Version: "2012-10-17"
         Statement:
-        - Effect: Allow
-          Principal:
-            Service:
-            - lambda.amazonaws.com
-          Action:
-          - sts:AssumeRole
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
       Path: "/"
       Policies:
-      - PolicyName: !Sub ${FunctionName}ExecutionRolePolicy
-        PolicyDocument:
-          Version: '2012-10-17'
-          Statement:
-          - Effect: Allow
-            Action:
-              - logs:CreateLogStream
-              - logs:CreateLogGroup
-              - logs:PutLogEvents
-              - sqs:SendMessage     
-            Resource: "*"
+        - PolicyName: !Sub ${FunctionName}ExecutionRolePolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogStream
+                  - logs:CreateLogGroup
+                  - logs:PutLogEvents
+                  - sqs:SendMessage
+                Resource: "*"
 
   Lambda:
     Type: AWS::Lambda::Function
@@ -90,4 +88,4 @@ Resources:
       FunctionName: !Ref Lambda
       MaximumEventAgeInSeconds: 60
       MaximumRetryAttempts: 2
-      Qualifier: $LATEST 
+      Qualifier: $LATEST
